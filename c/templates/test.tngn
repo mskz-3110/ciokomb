@@ -1,0 +1,7 @@
+#include <ciokomb.h>
+
+int32 main(int32 argc, String argv[]){
+  
+  
+  return EXIT_SUCCESS;
+}

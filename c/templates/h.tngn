@@ -1,0 +1,8 @@
+#ifndef __CIOKOMB_{0}__
+#define __CIOKOMB_{0}__
+#include <ciokomb/api.h>
+
+CIOKOMB_API_BEGIN
+  CIOKOMB_API_INC(void, ciokomb_, )
+CIOKOMB_API_END
+#endif
