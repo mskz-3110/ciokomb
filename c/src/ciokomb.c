@@ -6,7 +6,7 @@ CIOKOMB_API_SRC(void, ciokomb_vdprintf, String file, int32 line, String format, 
   ciokomb_string_add_string(&string, "[%s:", file);
   ciokomb_string_add_int32(&string, "%d] ", line);
   ciokomb_string_vprintf(&string, format, list);
-  printf("\033[40m\033[31m%s\033[0m\n", fixedString);
+  printf("%s\n", fixedString);
 }
 
 CIOKOMB_API_SRC(void, ciokomb_dprintf, String file, int32 line, String format, ...){
@@ -21,7 +21,9 @@ CIOKOMB_API_SRC(void, ciokomb_assert, String file, int32 line, bool expression, 
 
   va_list list;
   va_start(list, format);
+  printf("\033[40m\033[31m");
   ciokomb_vdprintf(file, line, format, list);
+  printf("\033[0m");
   va_end(list);
   exit(EXIT_FAILURE);
 }

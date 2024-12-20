@@ -10,7 +10,7 @@ static CIOKOMB_API_SRC(bool, __string_is_fixed, CiokombString* string){
   return string->__AllocatedSize <= 0;
 }
 
-CIOKOMB_API_SRC(String, __string_if_null, String value, String value_if_null){
+static CIOKOMB_API_SRC(String, __string_if_null, String value, String value_if_null){
   return value == null ? value_if_null : value;
 }
 
@@ -77,6 +77,7 @@ CIOKOMB_API_SRC(CiokombString*, ciokomb_string_new){
 }
 
 CIOKOMB_API_SRC(void, ciokomb_string_delete, CiokombString* string){
+  if (string == null) return;
   if (string->Chars != null){
     free(string->Chars);
   }

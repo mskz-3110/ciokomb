@@ -5,6 +5,10 @@
 #include <string.h>
 #include <float.h>
 
+#if defined(_WIN32) || defined(_WIN64)
+  #define CIOKOMB_WINDOWS
+#endif
+
 #ifndef int8
   #define int8 int8_t
 #endif

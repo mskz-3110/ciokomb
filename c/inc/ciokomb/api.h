@@ -5,8 +5,7 @@
 #include <stdarg.h>
 #include <ciokomb/types.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-  #define CIOKOMB_WINDOWS
+#ifdef CIOKOMB_WINDOWS
   #define __CIOKOMB_API_PREFIX __declspec(dllexport)
 #else
   #define __CIOKOMB_API_PREFIX

@@ -2,6 +2,7 @@ set(SRC_ROOT_PATH ${PROJECT_ROOT_PATH}/src)
 set(SRCS)
 list(APPEND SRCS ${SRC_ROOT_PATH}/ciokomb.c)
 list(APPEND SRCS ${SRC_ROOT_PATH}/ciokomb/string.c)
+list(APPEND SRCS ${SRC_ROOT_PATH}/ciokomb/arist.c)
 
 set(INCS)
 list(APPEND INCS ${PROJECT_ROOT_PATH}/inc)
