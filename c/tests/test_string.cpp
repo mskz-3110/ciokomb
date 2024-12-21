@@ -75,6 +75,7 @@ void test_yaml_line(){
 }
 
 int32 main(int32 argc, String argv[]){
+  if (!ciokomb_init()) return EXIT_FAILURE;
   CIOKOMB_ASSERT(ciokomb_string_equals(ciokomb_string_guard(null), ""), "guard error");
   CIOKOMB_ASSERT(ciokomb_string_equals(ciokomb_string_guard("abc"), "abc"), "guard error");
   CIOKOMB_ASSERT(ciokomb_string_starts_with("file.ext", ""), "starts with error");
@@ -103,5 +104,6 @@ int32 main(int32 argc, String argv[]){
   test_yaml_line();
   ciokomb_string_delete(string);
   ciokomb_string_delete(null);
+  ciokomb_exit();
   return EXIT_SUCCESS;
 }

@@ -41,6 +41,7 @@ void arist_dump(String file, int32 line, CiokombArist* arist, String format, ...
 }
 
 int32 main(int32 argc, String argv[]){
+  if (!ciokomb_init()) return EXIT_FAILURE;
   g_Verbose = ciokomb_string_to_int64(ciokomb_string_guard(getenv("VERBOSE"))) != 0;
 
   CiokombArist* arist = ciokomb_arist_new(sizeof(Element));
@@ -87,5 +88,6 @@ int32 main(int32 argc, String argv[]){
 
   ciokomb_arist_delete(arist);
   ciokomb_arist_delete(null);
+  ciokomb_exit();
   return EXIT_SUCCESS;
 }

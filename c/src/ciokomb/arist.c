@@ -58,6 +58,7 @@ CIOKOMB_API_SRC(int32, ciokomb_arist_get_count, CiokombArist* arist){
 }
 
 CIOKOMB_API_SRC(void*, ciokomb_arist_get_element, CiokombArist* arist, int32 index){
+  if (index < 0) return null;
   if (__arist_get_max_count(arist) <= index) return null;
 
   __AristNode* node = __arist_get_node(arist, index);

@@ -1,13 +1,15 @@
 #ifndef __CIOKOMB_TYPES_H__
 #define __CIOKOMB_TYPES_H__
+#if defined(_WIN32) || defined(_WIN64)
+  #define _CRTDBG_MAP_ALLOC
+  #include <crtdbg.h>
+  #define CIOKOMB_WINDOWS
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <float.h>
-
-#if defined(_WIN32) || defined(_WIN64)
-  #define CIOKOMB_WINDOWS
-#endif
 
 #ifndef int8
   #define int8 int8_t

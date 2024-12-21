@@ -7,6 +7,9 @@
 #define CIOKOMB_ASSERT(_expression, _format, ...) ciokomb_assert(__FILE__, __LINE__, _expression, _format, __VA_ARGS__)
 
 CIOKOMB_API_BEGIN
+  CIOKOMB_API_INC(bool, ciokomb_init)
+  CIOKOMB_API_INC(void, ciokomb_exit)
+
   CIOKOMB_API_INC(void, ciokomb_vdprintf, String file, int32 line, String format, va_list list)
   CIOKOMB_API_INC(void, ciokomb_dprintf, String file, int32 line, String format, ...)
   CIOKOMB_API_INC(void, ciokomb_assert, String file, int32 line, bool expression, String format, ...)

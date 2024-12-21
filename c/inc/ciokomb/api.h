@@ -1,9 +1,9 @@
 #ifndef __CIOKOMB_API_H__
 #define __CIOKOMB_API_H__
+#include <ciokomb/types.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <ciokomb/types.h>
 
 #ifdef CIOKOMB_WINDOWS
   #define __CIOKOMB_API_PREFIX __declspec(dllexport)
