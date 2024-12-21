@@ -2,6 +2,7 @@
 #define __CIOKOMB_H__
 #include <ciokomb/string.h>
 #include <ciokomb/arist.h>
+#include <ciokomb/pipe.h>
 
 #define CIOKOMB_DPRINTF(_format, ...) ciokomb_dprintf(__FILE__, __LINE__, _format, __VA_ARGS__)
 #define CIOKOMB_ASSERT(_expression, _format, ...) ciokomb_assert(__FILE__, __LINE__, _expression, _format, __VA_ARGS__)

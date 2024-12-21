@@ -1,7 +1,8 @@
 #include <ciokomb.h>
 
 int32 main(int32 argc, String argv[]){
+  if (!ciokomb_init()) return EXIT_FAILURE;
   
-  
+  ciokomb_exit();
   return EXIT_SUCCESS;
 }
