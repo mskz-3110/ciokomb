@@ -24,7 +24,7 @@ void element_assert(String file, int32 line, Element* element, int32 checkValue)
   ciokomb_assert(file, line, element->Value == checkValue, "value=%d", element->Value);
 }
 
-#define ARIST_DUMP(_arist, _format, ...) arist_dump(__FILE__, __LINE__, _arist, _format, __VA_ARGS__)
+#define ARIST_DUMP(_arist, _format, ...) arist_dump(__FILE__, __LINE__, _arist, _format, ## __VA_ARGS__)
 void arist_dump(String file, int32 line, CiokombArist* arist, String format, ...){
   if (g_Verbose){
     va_list list;

@@ -11,7 +11,7 @@
   #define __CIOKOMB_API_PREFIX
 #endif
 #define CIOKOMB_API_SRC(_return_type, _name, ...) _return_type _name(__VA_ARGS__)
-#define CIOKOMB_API_INC(_return_type, _name, ...) __CIOKOMB_API_PREFIX CIOKOMB_API_SRC(_return_type, _name, __VA_ARGS__);
+#define CIOKOMB_API_INC(_return_type, _name, ...) __CIOKOMB_API_PREFIX CIOKOMB_API_SRC(_return_type, _name, ## __VA_ARGS__);
 
 #ifdef __cplusplus
   #define CIOKOMB_API_BEGIN extern "C" {

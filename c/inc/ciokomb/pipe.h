@@ -4,12 +4,12 @@
 
 typedef struct {
   int32 Fds[2];
-} CiokombPipe;
+} CiokombPipeIO;
 
 CIOKOMB_API_BEGIN
-  CIOKOMB_API_INC(CiokombPipe*, ciokomb_pipe_open)
-  CIOKOMB_API_INC(void, ciokomb_pipe_close, CiokombPipe* pipe)
-  CIOKOMB_API_INC(int32, ciokomb_pipe_write, CiokombPipe* pipe, void* bytes, int32 size)
-  CIOKOMB_API_INC(int32, ciokomb_pipe_read, CiokombPipe* pipe, void* bytes, int32 size)
+  CIOKOMB_API_INC(CiokombPipeIO*, ciokomb_pipe_open)
+  CIOKOMB_API_INC(void, ciokomb_pipe_close, CiokombPipeIO* pipeIO)
+  CIOKOMB_API_INC(int32, ciokomb_pipe_write, CiokombPipeIO* pipeIO, void* bytes, int32 size)
+  CIOKOMB_API_INC(int32, ciokomb_pipe_read, CiokombPipeIO* pipeIO, void* bytes, int32 size)
 CIOKOMB_API_END
 #endif
