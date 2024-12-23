@@ -22,11 +22,13 @@ def cmake_build_macos(isClean):
         command([
           "cmake",
           "--build", buildDirectory,
+          "--config", configuration,
           "--target", "clean",
         ])
       command([
         "cmake",
         "--build", buildDirectory,
+        "--config", configuration,
       ], lambda _: None)
       print(find("**/*.a"))
 
