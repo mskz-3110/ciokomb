@@ -14,6 +14,7 @@ def cmake_build_macos(isClean):
         command([
           "cmake",
           "-G", "Xcode",
+          "-H", ".",
           "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(arch),
           "-D", """CMAKE_BUILD_TYPE={}""".format(configuration),
           "-B", buildDirectory,
