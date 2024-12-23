@@ -36,7 +36,7 @@ CIOKOMB_API_SRC(int32, ciokomb_pipe_write, CiokombPipeIO* pipeIO, void* bytes, i
 #ifdef CIOKOMB_WINDOWS
   return _write(pipeIO->Fds[1], bytes, size);
 #else
-  return write(pipeIO->Fds[1], bytes, (ssize_t)size);
+  return write((ssize_t)pipeIO->Fds[1], bytes, size);
 #endif
 }
 
@@ -44,6 +44,6 @@ CIOKOMB_API_SRC(int32, ciokomb_pipe_read, CiokombPipeIO* pipeIO, void* bytes, in
 #ifdef CIOKOMB_WINDOWS
   return _read(pipeIO->Fds[0], bytes, size);
 #else
-  return read(pipeIO->Fds[0], bytes, (ssize_t)size);
+  return read((ssize_t)pipeIO->Fds[0], bytes, size);
 #endif
 }
