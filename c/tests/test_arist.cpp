@@ -42,7 +42,9 @@ void arist_dump(String file, int32 line, CiokombArist* arist, String format, ...
 
 int32 main(int32 argc, String argv[]){
   if (!ciokomb_init()) return EXIT_FAILURE;
-  g_Verbose = ciokomb_string_to_int64(ciokomb_string_guard(getenv("VERBOSE"))) != 0;
+  char fixedEnv[32];
+  CiokombString envString = ciokomb_string_fixed(fixedEnv, sizeof(fixedEnv));
+  g_Verbose = ciokomb_string_to_int64(ciokomb_env_get(&envString, "VERBOSE")) != 0;
 
   CiokombArist* arist = ciokomb_arist_new(sizeof(Element));
   ARIST_ASSERT(arist, 0);

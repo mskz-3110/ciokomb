@@ -23,7 +23,9 @@ def windows_build(argv, isClean):
   if len(argv) == 0:
     paths = find(pattern)
   else:
-    paths = argv
+    paths = []
+    for path in argv:
+      paths.append(os.path.relpath("""{}/{}""".format(oldDir, path)))
   for path in paths:
     cmake_build_windows(path, isClean)
   chdir(oldDir)
