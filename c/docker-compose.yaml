@@ -1,0 +1,9 @@
+services:
+  debian:
+    container_name: ciokomb-debian
+    image: ciokomb-debian
+    build:
+      context: .
+      dockerfile: ./Dockerfile.debian
+    volumes:
+      - .:/home/ciokomb/c/

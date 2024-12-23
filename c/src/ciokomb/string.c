@@ -124,28 +124,33 @@ CIOKOMB_API_SRC(void, ciokomb_string_add_string_repeat, CiokombString* string, S
 }
 
 CIOKOMB_API_SRC(void, ciokomb_string_vprintf, CiokombString* string, String format, va_list list){
+  va_list copiedList;
+  va_copy(copiedList, list);
   int32 writableSize = __string_get_allocated_size(string) - string->Length;
   int32 length = vsnprintf(&(string->Chars[string->Length]), writableSize, format, list);
-  if (length <= 0) return;
-  if (length < writableSize){
-    string->Length += length;
-    return;
-  }
-  if (__string_is_fixed(string)){
-    string->Length = (int32)strlen(string->Chars);
-    return;
-  }
+  do{
+    if (length <= 0) break;
+    if (length < writableSize){
+      string->Length += length;
+      break;
+    }
+    if (__string_is_fixed(string)){
+      string->Length = (int32)strlen(string->Chars);
+      break;
+    }
 
-  int32 needSize = string->Length + length + 1;
-  int32 allocatedSize = string->__AllocatedSize * 2;
-  while (allocatedSize < needSize) allocatedSize *= 2;
-  char* allocatedChars = realloc(string->Chars, allocatedSize);
-  if (allocatedChars == null) return;
+    int32 needSize = string->Length + length + 1;
+    int32 allocatedSize = string->__AllocatedSize * 2;
+    while (allocatedSize < needSize) allocatedSize *= 2;
+    char* allocatedChars = realloc(string->Chars, allocatedSize);
+    if (allocatedChars == null) break;
 
-  string->Chars = allocatedChars;
-  string->__AllocatedSize = allocatedSize;
-  length = vsnprintf(&(string->Chars[string->Length]), string->__AllocatedSize - string->Length, format, list);
-  if (0 < length) string->Length += length;
+    string->Chars = allocatedChars;
+    string->__AllocatedSize = allocatedSize;
+    length = vsnprintf(&(string->Chars[string->Length]), string->__AllocatedSize - string->Length, format, copiedList);
+    if (0 < length) string->Length += length;
+  }while (0);
+  va_end(copiedList);
 }
 
 CIOKOMB_API_SRC(void, ciokomb_string_printf, CiokombString* string, String format, ...){
