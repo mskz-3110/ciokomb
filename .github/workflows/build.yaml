@@ -10,7 +10,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-          cache: 'pip'
       - run: pip install pyyaml
       - name: Build macos
         run: python ./c/cbuildon.py macos.build
