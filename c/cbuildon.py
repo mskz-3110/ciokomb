@@ -32,7 +32,7 @@ def macos_build(isClean):
   oldDir = getdir()
   chdir("build/macos")
   cmake_build_macos(isClean)
-  print(find("build/**/*.a"))
+  print(find("build/**/*ciokomb.*"))
   chdir(oldDir)
 
 def macos_test(argv):
