@@ -2,7 +2,7 @@ name: Build
 on: push
 jobs:
   build-macos:
-    if: ${{ github.ref == "refs/heads/build/macos" }}
+    if: ${{ github.ref_name == "build/macos" }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
