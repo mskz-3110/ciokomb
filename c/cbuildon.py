@@ -28,7 +28,7 @@ def cmake_build_macos(isClean):
         "cmake",
         "--build", buildDirectory,
         "--config", configuration,
-      ], lambda: None)
+      ], lambda _: None)
       print(find("**/*.a"))
 
 def macos_build(isClean):
