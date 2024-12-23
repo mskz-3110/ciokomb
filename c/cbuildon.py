@@ -8,7 +8,7 @@ def cmake_build_macos(isClean):
   for arch in archs:
     configurations = ["Debug", "Release"]
     for configuration in configurations:
-      buildDirectory = """build/{}_{}""".format(arch, configuration)
+      buildDirectory = """build/{}""".format(arch)
       if os.path.isdir(buildDirectory) is False:
         mkdir(buildDirectory)
         command([
