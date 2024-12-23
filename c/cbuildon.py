@@ -35,7 +35,7 @@ def macos_build(isClean):
   chdir(oldDir)
 
 def macos_test(argv):
-  pass
+  print(find("build/macos/build/**/*.a"))
 
 chdir(os.path.dirname(__file__))
 argv = sys.argv[1:]
