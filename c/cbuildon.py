@@ -14,20 +14,20 @@ def cmake_build_macos(isClean):
         command([
           "cmake",
           "-G", "Xcode",
-          "-H", ".",
           "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(arch),
-          "-D", """CMAKE_BUILD_TYPE={}""".format(configuration),
           "-B", buildDirectory,
         ])
       elif isClean:
         command([
           "cmake",
           "--build", buildDirectory,
+          "--config", configuration,
           "--target", "clean",
         ])
       command([
         "cmake",
-        "--build", buildDirectory
+        "--build", buildDirectory,
+        "--config", configuration,
       ])
 
 def macos_build(isClean):
