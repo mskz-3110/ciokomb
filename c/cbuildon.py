@@ -32,10 +32,11 @@ def macos_build(isClean):
   oldDir = getdir()
   chdir("build/macos")
   cmake_build_macos(isClean)
+  print(find("**/*.a"))
   chdir(oldDir)
 
 def macos_test(argv):
-  print(find("build/macos/build/**/*.a"))
+  pass
 
 chdir(os.path.dirname(__file__))
 argv = sys.argv[1:]
