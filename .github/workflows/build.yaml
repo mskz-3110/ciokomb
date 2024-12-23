@@ -1,0 +1,12 @@
+name: Build
+on: push
+jobs:
+  build-macos:
+    if: ${{ github.ref == "refs/heads/build/macos" }}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build macos
+        run: python ./c/cbuildon.py macos.build
+      - name: Test macos
+        run: python ./c/cbuildon.py macos.test
