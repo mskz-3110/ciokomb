@@ -6,8 +6,6 @@ from cbuildon_scripts import *
 def move_lib(libDir, buildDirPattern, exts):
   for ext in exts:
     for path in find("""{}/*.{}""".format(buildDirPattern, ext)):
-      print(path)
-      command(["xcrun", "lipo", "-info", path])
       mkdir(libDir)
       move(path, libDir)
 
@@ -16,7 +14,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
     match osName:
       case "ios":
         for combination in buildConfig[generator]:
-          macosTarget, archs, configuration = combination.split(" ")
+          archs, configuration = combination.split(" ")
           buildDir = """{}""".format(configuration)
           libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
           buildDir = """build/{}""".format(buildDir)
@@ -30,7 +28,6 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "-D", "CMAKE_MACOSX_BUNDLE=YES",
               "-D", "CMAKE_SYSTEM_NAME=iOS",
               "-D", "CMAKE_OSX_SYSROOT=iphoneos",
-              #"-D", """CMAKE_OSX_DEPLOYMENT_TARGET={}""".format(macosTarget),
               "-D", """LIB_DIR={}""".format(libDir),
               "-B", buildDir,
             ])
@@ -74,7 +71,9 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
 def version(osName):
   stdout = ""
   match osName:
-    case "macos" | "ios":
+    case "ios":
+      stdout = command(["xcrun", "--sdk", "iphoneos", "--show-sdk-version"], stdout = subprocess.PIPE).stdout
+    case "macos":
       stdout = command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout
     case _:
       return "?"
