@@ -14,8 +14,8 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
     match osName:
       case "ios":
         for combination in buildConfig[generator]:
-          osxDeploymentTarget, configuration = combination.split(" ")
-          buildDir = """{}""".format(configuration)
+          macosTarget, iosTarget, configuration = combination.split(" ")
+          buildDir = """{}_{}""".format(iosTarget, configuration)
           libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
           buildDir = """build/{}""".format(buildDir)
           if isClean:
@@ -28,7 +28,8 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "-D", "CMAKE_MACOSX_BUNDLE=YES",
               "-D", "CMAKE_SYSTEM_NAME=iOS",
               "-D", "CMAKE_OSX_SYSROOT=iphoneos",
-              "-D", """CMAKE_OSX_DEPLOYMENT_TARGET={}""".format(osxDeploymentTarget),
+              "-D", """CMAKE_OSX_DEPLOYMENT_TARGET={}""".format(macosTarget),
+              "-D", """IPHONEOS_DEPLOYMENT_TARGET={}""".format(iosTarget),
               "-D", """LIB_DIR={}""".format(libDir),
               "-B", buildDir,
             ])
@@ -36,7 +37,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "cmake",
               "--build", buildDir,
               "--config", configuration,
-            ])
+            ], lambda _: None)
           print(find("""{}/**.*.a""".format(buildDir)))
       case "macos":
         for combination in buildConfig[generator]:
