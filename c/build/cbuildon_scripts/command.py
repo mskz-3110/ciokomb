@@ -1,15 +1,15 @@
 import subprocess
-import datetime as dt
+import datetime
 import sys
 import os
 import glob
 import shutil
 
-def command(args, onProcess = None):
+def command(args, onProcess = None, **kwargs):
   if onProcess is None:
     onProcess = lambda result: """\033[40m\033[31mFail: Return code is {}.\033[0m""".format(result.returncode)
-  print("""\033[40m\033[32m[{}] {} $ {}\033[0m""".format(dt.datetime.now().strftime("%y/%m/%d %H:%M:%S"), os.getcwd(), " ".join(args)))
-  result = subprocess.run(args)
+  print("""\033[40m\033[32m[{}] {} $ {}\033[0m""".format(datetime.datetime.now().strftime("%y/%m/%d %H:%M:%S"), os.getcwd(), " ".join(args)))
+  result = subprocess.run(args, **kwargs)
   if result.returncode != 0:
     exitArg = onProcess(result)
     if exitArg is not None:

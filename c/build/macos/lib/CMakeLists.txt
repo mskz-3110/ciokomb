@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
-project("ciokomb")
-set(PROJECT_ROOT_PATH "../../..")
+project(ciokomb)
+set(PROJECT_ROOT_PATH ../../..)
 include(../../${PROJECT_NAME}_lib.cmake)
 link_directories(${LIB_DIR})
 message("LIB_DIR=${LIB_DIR}")
