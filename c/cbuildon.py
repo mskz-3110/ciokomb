@@ -6,6 +6,7 @@ from cbuildon_scripts import *
 def move_lib(libDir, buildDirPattern, exts):
   for ext in exts:
     for path in find("""{}/*.{}""".format(buildDirPattern, ext)):
+      print(path)
       mkdir(libDir)
       move(path, libDir)
 
