@@ -10,7 +10,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - nane: Install yaml
+      - name: Install yaml
         run: pip install pyyaml
       - name: Build
         run: python ./c/cbuildon.py ios.build
