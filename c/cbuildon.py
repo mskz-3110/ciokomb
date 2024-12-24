@@ -45,8 +45,12 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "CODE_SIGNING_ALLOWED=NO",
               "-sdk", sdk,
             ] + options)
-          for path in find("""{}/**/*.a""".format(buildDir)):
+          libPaths = find("""{}/{}-*/**/*.a""".format(buildDir, configuration))
+          for path in libPaths:
             command(["xcrun", "lipo", "-info", path])
+          if 0 < len(libPaths):
+            mkdir(libDir)
+            command(["xcrun", "lipo", "-create", """{}/{}""".format(libDir, os.path.basename(libPaths[0]))] + libPaths)
       case "macos":
         for combination in buildConfig[generator]:
           arch, configuration = combination.split(" ")
