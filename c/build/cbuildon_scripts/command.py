@@ -22,6 +22,9 @@ def copy(src, dst):
   else:
     shutil.copytree(src, dst)
 
+def move(src, dst):
+  shutil.move(src, dst)
+
 def rm(path):
   if os.path.exists(path):
     shutil.rmtree(path)

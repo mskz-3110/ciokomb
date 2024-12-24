@@ -3,10 +3,17 @@ import os
 sys.path.append("""{}/build""".format(os.path.dirname(__file__)))
 from cbuildon_scripts import *
 
+def macos_version():
+  print(command(["sw_vers", "--productVersion"], lambda _: None))
+  return "xxx"
+
 def cmake_build_macos(isClean):
+  macosVersion = macos_version()
+  print("""macosVersion={}""".format(macosVersion))
   for arch in ["x86_64"]:
     for configuration in ["Debug", "Release"]:
       buildDirectory = """build/{}_{}""".format(arch, configuration)
+      libDir = """../../../lib/macos/{}/{}""".format(macosVersion, configuration)
       buildArgs = [
           "cmake",
           "--build", buildDirectory,
@@ -18,12 +25,16 @@ def cmake_build_macos(isClean):
           "cmake",
           "-G", "Xcode",
           "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(arch),
+          "-D", """LIB_DIR={}""".format(libDir),
           "-B", buildDirectory,
         ])
       elif isClean:
         command(buildArgs + ["--target", "clean"])
-      command(buildArgs, lambda result: None)
-      print(find("build/**/*.a"))
+      command(buildArgs, lambda _: None)
+      for path in find("""{}/**/*.dylib""".format(buildDirectory)) + find("""{}/**/*.a""".format(buildDirectory)):
+        print("""move: {} -> {}""".format(path, libDir))
+        mkdir(libDir)
+        move(path, libDir)
 
 def macos_build(isClean):
   oldDir = getdir()
