@@ -1,5 +1,4 @@
 from .cmake import *
-from .test import *
 
 def linux_build(isClean):
   oldDir = getdir()
