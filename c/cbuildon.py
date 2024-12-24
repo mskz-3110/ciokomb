@@ -7,6 +7,7 @@ from cbuildon_scripts import *
 def move_lib(libDir, buildDirPattern, exts):
   for ext in exts:
     for path in find("""{}/*.{}""".format(buildDirPattern, ext)):
+      command(["xcrun", "lipo", "-info", path])
       mkdir(libDir)
       move(path, libDir)
 
@@ -57,8 +58,8 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
             move_lib(libDir, """{}/{}-*""".format(buildDir, configuration), ["dylib", "a"])
       case "macos":
         for combination in buildConfig[generator]:
-          arch, configuration = combination.split(" ")
-          buildDir = """{}_{}""".format(arch, configuration)
+          archs, configuration = combination.split(" ")
+          buildDir = """{}""".format(configuration)
           libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
           buildDir = """build/{}""".format(buildDir)
           if isClean:
@@ -68,7 +69,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
             command([
               "cmake",
               "-G", "Xcode",
-              "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(arch),
+              "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(archs),
               "-D", """LIB_DIR={}""".format(libDir),
               "-B", buildDir,
             ])
