@@ -14,9 +14,9 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
     match osName:
       case "ios":
         for combination in buildConfig[generator]:
-          macosTarget, sdk, archs, configuration = combination.split(" ")
+          macosTarget, archs, configuration = combination.split(" ")
           buildDir = """{}""".format(configuration)
-          libDir = os.path.abspath("""{}_{}_{}""".format(libRootDir, sdk, buildDir))
+          libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
           buildDir = """build/{}""".format(buildDir)
           if isClean:
             rm(buildDir)
@@ -43,14 +43,15 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--",
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
-              "-sdk", sdk,
             ] + options)
           libPaths = find("""{}/{}-*/**/*.a""".format(buildDir, configuration))
           for path in libPaths:
             command(["xcrun", "lipo", "-info", path])
           if 0 < len(libPaths):
             mkdir(libDir)
-            command(["xcrun", "lipo", "-create", """{}/{}""".format(libDir, os.path.basename(libPaths[0]))] + libPaths)
+            libName = """{}/{}""".format(libDir, os.path.basename(libPaths[0]))
+            command(["xcrun", "lipo", "-create", libName] + libPaths)
+            command(["xcrun", "lipo", "-info", libName])
       case "macos":
         for combination in buildConfig[generator]:
           arch, configuration = combination.split(" ")

@@ -1,3 +1,2 @@
 Xcode:
-  - 11.0 iphonesimulator x86_64 Debug
-  - 11.0 iphoneos arm64;arm64e Debug
+  - 11.0 arm64;arm64e Debug
