@@ -14,8 +14,8 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
     match osName:
       case "ios":
         for combination in buildConfig[generator]:
-          macosTarget, iosTarget, configuration = combination.split(" ")
-          buildDir = """{}_{}""".format(iosTarget, configuration)
+          macosTarget, configuration = combination.split(" ")
+          buildDir = """{}""".format(configuration)
           libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
           buildDir = """build/{}""".format(buildDir)
           if isClean:
@@ -40,7 +40,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
             ])
-          print(find("""{}/**.*.a""".format(buildDir)))
+          print(find("""{}/**.a""".format(buildDir)))
       case "macos":
         for combination in buildConfig[generator]:
           arch, configuration = combination.split(" ")
