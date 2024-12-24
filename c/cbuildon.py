@@ -28,10 +28,7 @@ def cmake_build_macos(libRootDir, isClean):
       elif isClean:
         command(buildArgs + ["--target", "clean"])
       command(buildArgs, lambda _: None)
-      print("Build completed")
-      print(find("""{}/**/*.a""".format(buildDirectory)))
       for path in find("""{}/**/*.dylib""".format(buildDirectory)) + find("""{}/**/*.a""".format(buildDirectory)):
-        print("""move: {} -> {}""".format(path, libDir))
         mkdir(libDir)
         move(path, libDir)
 
@@ -44,7 +41,10 @@ def macos_build(isClean):
     chdir(oldDir)
 
 def macos_test(argv):
-  pass
+  for testName in test_names(argv):
+    for path in find("""build/macos/tests/build/**/{}""".format(testName)):
+      print(path)
+      command([path])
 
 chdir(os.path.dirname(__file__))
 argv = sys.argv[1:]

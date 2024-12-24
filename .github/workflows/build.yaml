@@ -11,7 +11,12 @@ jobs:
         with:
           python-version: '3.13'
       - run: pip install pyyaml
-      - name: Build macos
+      - name: Build
         run: python ./c/cbuildon.py macos.build
-      - name: Test macos
+      - name: Test
         run: python ./c/cbuildon.py macos.test
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: lib_macos
+          path: ./c/lib/**
