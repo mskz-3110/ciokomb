@@ -7,7 +7,6 @@ from cbuildon_scripts import *
 def move_lib(libDir, buildDirPattern, exts):
   for ext in exts:
     for path in find("""{}/*.{}""".format(buildDirPattern, ext)):
-      command(["xcrun", "lipo", "-info", path])
       mkdir(libDir)
       move(path, libDir)
 
@@ -79,7 +78,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--config", configuration,
             ])
           if isMoveLib:
-            move_lib(libDir, """{}/**""".format(buildDir), ["dylib", "a"])
+            move_lib(libDir, """{}/{}""".format(buildDir, configuration), ["dylib", "a"])
       case "windows":
         for generator in buildConfig.keys():
           version = generator.split(" ")[-1]
