@@ -12,10 +12,11 @@ jobs:
           python-version: '3.13'
       - name: Install yaml
         run: pip install pyyaml
-      - name: Build
+      - name: Build ios
         run: python ./c/cbuildon.py ios.build
+      - name: Build macos
         run: python ./c/cbuildon.py macos.build
-      - name: Test
+      - name: Test macos
         run: python ./c/cbuildon.py macos.test
       - name: Upload
         uses: actions/upload-artifact@v4
