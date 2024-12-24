@@ -4,6 +4,11 @@ sys.path.append("""{}/build""".format(os.path.dirname(__file__)))
 from cbuildon_scripts import *
 
 def cmake_build_macos(isClean):
+  buildArgs = [
+      "cmake",
+      "--build", buildDirectory,
+      "--config", configuration,
+    ]
   configurations = ["Debug", "Release"]
   for configuration in configurations:
     buildDirectory = "build"
@@ -12,27 +17,18 @@ def cmake_build_macos(isClean):
       command([
         "cmake",
         "-G", "Xcode",
-        "-D", "CMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\"",
+        "-D", "CMAKE_OSX_ARCHITECTURES=x86_64",
         "-B", buildDirectory,
       ])
     elif isClean:
-      command([
-        "cmake",
-        "--build", buildDirectory,
-        "--config", configuration,
-        "--target", "clean",
-      ])
-    command([
-      "cmake",
-      "--build", buildDirectory,
-      "--config", configuration,
-    ])
+      command(buildArgs + ["--target", "clean"])
+    command(buildArgs)
 
 def macos_build(isClean):
   oldDir = getdir()
   chdir("build/macos")
   cmake_build_macos(isClean)
-  print(find("build/**/*ciokomb.*"))
+  print(find("build/**/*.a"))
   chdir(oldDir)
 
 def macos_test(argv):
