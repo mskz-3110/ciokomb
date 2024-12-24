@@ -45,7 +45,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
             ] + options)
-          move_lib(libDir, """{}/{}-*/*""".format(buildDir, configuration), ["dylib", "a"])
+          move_lib(libDir, """{}/{}-*""".format(buildDir, configuration), ["dylib", "a"])
       case "macos":
         for combination in buildConfig[generator]:
           arch, configuration = combination.split(" ")
