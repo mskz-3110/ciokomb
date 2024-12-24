@@ -39,7 +39,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--",
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
-              "-arch", "arm64"
+              "-arch", "arm64",
               "-arch", "arm64e"
             ])
           for path in find("""{}/**/*.a""".format(buildDir)):
