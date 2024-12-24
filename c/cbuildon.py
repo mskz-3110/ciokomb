@@ -22,7 +22,6 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
             rm(buildDir)
           if os.path.isdir(buildDir) is False:
             mkdir(buildDir)
-            os.environ["VERBOSE"] = "1"
             command([
               "cmake",
               "-G", "Xcode",
@@ -37,6 +36,8 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "cmake",
               "--build", buildDir,
               "--config", configuration,
+              "-D", "CODE_SIGNING_REQUIRED=NO",
+              "-D", "CODE_SIGNING_ALLOWED=NO",
             ])
           print(find("""{}/**.*.a""".format(buildDir)))
       case "macos":
