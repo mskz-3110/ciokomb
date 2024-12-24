@@ -37,7 +37,8 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
 
 def version(osName):
   match osName:
-    return command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout.decode("utf-8").rstrip()
+    case "macos":
+      return command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout.decode("utf-8").rstrip()
   return "?"
 
 def build_config_paths(osName, argv):
