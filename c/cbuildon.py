@@ -38,10 +38,11 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--build", buildDir,
               "--config", configuration,
               "--",
+              "-sdk", sdk,
+            ] + archs + [
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
-              "-sdk", sdk,
-            ] + archs)
+            ])
           for path in find("""{}/**/*.a""".format(buildDir)):
             command(["xcrun", "lipo", "-info", path])
       case "macos":
