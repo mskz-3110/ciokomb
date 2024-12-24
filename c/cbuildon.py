@@ -3,9 +3,9 @@ import os
 sys.path.append("""{}/build""".format(os.path.dirname(__file__)))
 from cbuildon_scripts import *
 
-def move_lib(libDir, buildDir, exts):
+def move_lib(libDir, buildDirPattern, exts):
   for ext in exts:
-    for path in find("""{}/**/*.{}""".format(buildDir, ext)):
+    for path in find("""{}/*.{}""".format(buildDirPattern, ext)):
       mkdir(libDir)
       move(path, libDir)
 
@@ -44,14 +44,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
             ] + options)
-          libPaths = find("""{}/{}-*/**/*.a""".format(buildDir, configuration))
-          for path in libPaths:
-            command(["xcrun", "lipo", "-info", path])
-          if 0 < len(libPaths):
-            mkdir(libDir)
-            libName = """{}/{}""".format(libDir, os.path.basename(libPaths[0]))
-            command(["xcrun", "lipo", "-create", libName] + libPaths)
-            command(["xcrun", "lipo", "-info", libName])
+          move_lib(libDir, """{}/{}-*/**""".format(buildDir, configuration), ["dylib", "a"])
       case "macos":
         for combination in buildConfig[generator]:
           arch, configuration = combination.split(" ")
@@ -74,7 +67,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--build", buildDir,
               "--config", configuration,
             ])
-          move_lib(libDir, buildDir, ["dylib", "a"])
+          move_lib(libDir, """{}/**""".format(buildDir), ["dylib", "a"])
 
 def version(osName):
   stdout = ""
