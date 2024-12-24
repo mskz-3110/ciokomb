@@ -1,0 +1,5 @@
+Xcode:
+  - x86_64 Debug
+  - x86_64 Release
+  - arm64 Debug
+  - arm64 Release

@@ -3,46 +3,74 @@ import os
 sys.path.append("""{}/build""".format(os.path.dirname(__file__)))
 from cbuildon_scripts import *
 
-def macos_version():
-  return command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout.decode("utf-8").rstrip()
+def move_lib(libDir, buildDir, exts):
+  for ext in exts:
+    for path in find("""{}/**/*.{}""".format(buildDir, ext)):
+      mkdir(libDir)
+      move(path, libDir)
 
-def cmake_build_macos(libRootDir, isClean):
-  for arch in ["arm64", "x86_64"]:
-    for configuration in ["Debug", "Release"]:
-      buildDirectory = """build/{}_{}""".format(arch, configuration)
-      libDir = os.path.abspath("""{}_{}_{}""".format(libRootDir, arch, configuration))
-      buildArgs = [
-          "cmake",
-          "--build", buildDirectory,
-          "--config", configuration,
-        ]
-      if os.path.isdir(buildDirectory) is False:
-        mkdir(buildDirectory)
-        command([
-          "cmake",
-          "-G", "Xcode",
-          "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(arch),
-          "-D", """LIB_DIR={}""".format(libDir),
-          "-B", buildDirectory,
-        ])
-      elif isClean:
-        command(buildArgs + ["--target", "clean"])
-      command(buildArgs, lambda _: None)
-      for path in find("""{}/**/*.dylib""".format(buildDirectory)) + find("""{}/**/*.a""".format(buildDirectory)):
-        mkdir(libDir)
-        move(path, libDir)
+def cmake_build(osName, libRootDir, buildConfig, isClean):
+  for generator in buildConfig.keys():
+    match osName:
+      case "macos":
+        for combination in buildConfig[generator]:
+          arch, configuration = combination.split(" ")
+          buildDir = """build/{}_{}""".format(arch, configuration)
+          libDir = os.path.abspath("""{}_{}_{}""".format(libRootDir, arch, configuration))
+          if isClean:
+            rm(buildDir)
+          if os.path.isdir(buildDir) is False:
+            mkdir(buildDir)
+            command([
+              "cmake",
+              "-G", "Xcode",
+              "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(arch),
+              "-D", """LIB_DIR={}""".format(libDir),
+              "-B", buildDir,
+            ])
+          command([
+              "cmake",
+              "--build", buildDir,
+              "--config", configuration,
+            ])
+          move_lib(libDir, buildDir, ["dylib", "a"])
 
-def macos_build(isClean):
+def version(osName):
+  match osName:
+    return command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout.decode("utf-8").rstrip()
+  return "?"
+
+def build_config_paths(osName, argv):
+  if len(argv) == 0:
+    return find("""build/{}/build.yaml""".format(osName))
+  cwd = getdir()
+  paths = []
+  for arg in argv:
+    path = os.path.relpath("""{}/{}""".format(cwd, arg))
+    exists_assert(path)
+    paths.append(path)
+  return paths
+
+def build(osName, isClean):
   oldDir = getdir()
-  libRootDir = """{}/lib/macos/{}""".format(oldDir, macos_version())
-  for targetDirectory in ["build/macos/lib", "build/macos/tests"]:
-    chdir(targetDirectory)
-    cmake_build_macos(libRootDir, isClean)
-    chdir(oldDir)
+  libRootDir = """{}/lib/{}/{}""".format(oldDir, osName, version(osName))
+  for path in build_config_paths(osName, argv):
+    with open(path, "r", encoding = "utf-8") as file:
+      buildConfig = yaml.safe_load(file)
+      for buildDir in ["lib", "tests"]:
+        chdir("""build/{}/{}""".format(osName, buildDir))
+        cmake_build(osName, libRootDir, buildConfig, isClean)
+        chdir(oldDir)
 
-def macos_test(argv):
+def test_names(testNames = []):
+  if len(testNames) == 0:
+    return list(map(lambda filePath: os.path.splitext(os.path.basename(filePath))[0], find("tests/*.c") + find("tests/*.cpp")))
+  else:
+    return testNames
+
+def test(osName, argv):
   for testName in test_names(argv):
-    for path in find("""build/macos/tests/build/**/{}""".format(testName)):
+    for path in find("""build/{}/tests/build/**/{}""".format(osName, testName)):
       print(path)
       command([path])
 
@@ -50,16 +78,6 @@ chdir(os.path.dirname(__file__))
 argv = sys.argv[1:]
 taskName = shift(argv, "")
 match taskName:
-  case "windows.build":
-    windows_build(argv, False)
-  case "windows.rebuild":
-    windows_build(argv, True)
-  case "windows.test":
-    windows_test(argv)
-  case "android.build":
-    android_build(argv, False)
-  case "android.rebuild":
-    android_build(argv, True)
   case "docker.build":
     command(["docker", "compose", "build"])
   case "docker.run":
@@ -69,28 +87,28 @@ match taskName:
   case "linux.rebuild":
     linux_build(True)
   case "linux.test":
-    linux_test(argv)
+    test("linux", argv)
+  case "windows.build":
+    windows_build(argv, False)
+  case "windows.rebuild":
+    windows_build(argv, True)
+  case "windows.test":
+    test("windows", argv)
+  case "android.build":
+    android_build(argv, False)
+  case "android.rebuild":
+    android_build(argv, True)
   case "macos.build":
-    macos_build(False)
+    build("macos", False)
   case "macos.rebuild":
-    macos_build(False)
+    build("macos", True)
   case "macos.test":
-    macos_test(argv)
+    test("macos", argv)
   case _:
     strings = []
     if 0 < len(taskName):
       strings.append("""\033[40m\033[31m{}\033[0m is undefined.""".format(taskName))
     strings.append("""<Tasks>
-  windows.build <yaml file paths>
-
-  windows.rebuild <yaml file paths>
-
-  windows.test <test names>
-
-  android.build <yaml file paths>
-
-  android.rebuild <yaml file paths>
-
   docker.build
 
   docker.run
@@ -100,6 +118,16 @@ match taskName:
   linux.rebuild
 
   linux.test <test names>
+
+  windows.build <yaml file paths>
+
+  windows.rebuild <yaml file paths>
+
+  windows.test <test names>
+
+  android.build <yaml file paths>
+
+  android.rebuild <yaml file paths>
 
   macos.build
 
