@@ -1,4 +1,4 @@
-include(./${PROJECT_NAME}.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}.cmake)
 
 add_library(${PROJECT_NAME}-Shared SHARED ${SRCS})
 set_target_properties(${PROJECT_NAME}-Shared PROPERTIES OUTPUT_NAME ${PROJECT_NAME})

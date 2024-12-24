@@ -1,4 +1,4 @@
-include(./${PROJECT_NAME}.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}.cmake)
 
 set(TESTS_ROOT_PATH ${PROJECT_ROOT_PATH}/tests)
 include_directories(${TESTS_ROOT_PATH})
