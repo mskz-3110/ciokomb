@@ -10,7 +10,7 @@ def cmake_build_macos(libRootDir, isClean):
   for arch in ["arm64", "x86_64"]:
     for configuration in ["Debug", "Release"]:
       buildDirectory = """build/{}_{}""".format(arch, configuration)
-      libDir = os.path.abspath("""{}/{}""".format(libRootDir, configuration))
+      libDir = os.path.abspath("""{}_{}_{}""".format(libRootDir, arch, configuration))
       buildArgs = [
           "cmake",
           "--build", buildDirectory,
