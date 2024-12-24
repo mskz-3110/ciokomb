@@ -22,7 +22,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
             rm(buildDir)
           if os.path.isdir(buildDir) is False:
             mkdir(buildDir)
-            os.environ["IPHONEOS_DEPLOYMENT_TARGET"] = iosTarget
+            os.environ["VERBOSE"] = "1"
             command([
               "cmake",
               "-G", "Xcode",
