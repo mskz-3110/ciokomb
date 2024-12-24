@@ -14,9 +14,9 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
     match osName:
       case "ios":
         for combination in buildConfig[generator]:
-          macosTarget, configuration = combination.split(" ")
+          macosTarget, sdk, archs, configuration = combination.split(" ")
           buildDir = """{}""".format(configuration)
-          libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
+          libDir = os.path.abspath("""{}_{}_{}""".format(libRootDir, sdk, buildDir))
           buildDir = """build/{}""".format(buildDir)
           if isClean:
             rm(buildDir)
@@ -27,11 +27,12 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "-G", "Xcode",
               "-D", "CMAKE_MACOSX_BUNDLE=YES",
               "-D", "CMAKE_SYSTEM_NAME=iOS",
-              "-D", "CMAKE_OSX_SYSROOT=iphoneos",
+              "-D", """CMAKE_OSX_SYSROOT={}""".format(sdk),
               "-D", """CMAKE_OSX_DEPLOYMENT_TARGET={}""".format(macosTarget),
               "-D", """LIB_DIR={}""".format(libDir),
               "-B", buildDir,
             ])
+          archs = list(map(lambda arch: """-arch {}""".format(arch), archs.split(";")))
           command([
               "cmake",
               "--build", buildDir,
@@ -39,9 +40,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--",
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
-              "-arch", "arm64",
-              "-arch", "arm64e"
-            ])
+            ] + archs)
           for path in find("""{}/**/*.a""".format(buildDir)):
             command(["xcrun", "lipo", "-info", path])
       case "macos":
