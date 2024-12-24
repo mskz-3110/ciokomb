@@ -4,26 +4,27 @@ sys.path.append("""{}/build""".format(os.path.dirname(__file__)))
 from cbuildon_scripts import *
 
 def cmake_build_macos(isClean):
-  configurations = ["Debug", "Release"]
-  for configuration in configurations:
-    buildDirectory = "build"
-    buildArgs = [
-        "cmake",
-        "--build", buildDirectory,
-        "--config", configuration,
-      ]
-    if os.path.isdir(buildDirectory) is False:
-      mkdir(buildDirectory)
-      command([
-        "cmake",
-        "-G", "Xcode",
-        "-D", "CMAKE_OSX_ARCHITECTURES=x86_64",
-        "-B", buildDirectory,
-      ])
-    elif isClean:
-      command(buildArgs + ["--target", "clean"])
-    command(buildArgs, lambda result: None)
-    print(find("""build/{}/**/*""".format(configuration)))
+  for arch in ["x86_64"]:
+    for configuration in ["Debug", "Release"]:
+      buildDirectory = """build/{}_{}""".format(arch, configuration)
+      buildArgs = [
+          "cmake",
+          "--build", buildDirectory,
+          "--config", configuration,
+        ]
+      if os.path.isdir(buildDirectory) is False:
+        mkdir(buildDirectory)
+        command([
+          "cmake",
+          "-G", "Xcode",
+          "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(arch),
+          "-D", """CONFIGURATION={}""".format(configuration)
+          "-B", buildDirectory,
+        ])
+      elif isClean:
+        command(buildArgs + ["--target", "clean"])
+      command(buildArgs, lambda result: None)
+      print(find("""build/{}/**/*""".format(configuration)))
 
 def macos_build(isClean):
   oldDir = getdir()
