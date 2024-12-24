@@ -4,7 +4,7 @@ sys.path.append("""{}/build""".format(os.path.dirname(__file__)))
 from cbuildon_scripts import *
 
 def macos_version():
-  return str(command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout).rstrip()
+  return command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout.decode("utf-8").rstrip()
 
 def cmake_build_macos(libRootDir, isClean):
   for arch in ["x86_64"]:
