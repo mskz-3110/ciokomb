@@ -22,13 +22,13 @@ def cmake_build_macos(isClean):
       ])
     elif isClean:
       command(buildArgs + ["--target", "clean"])
-    command(buildArgs, lambda: None)
+    command(buildArgs, lambda result: None)
 
 def macos_build(isClean):
   oldDir = getdir()
   chdir("build/macos")
   cmake_build_macos(isClean)
-  print(find("build/**/*.a"))
+  print(find("build/**/*"))
   chdir(oldDir)
 
 def macos_test(argv):
