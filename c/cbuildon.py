@@ -7,6 +7,7 @@ def move_lib(libDir, buildDirPattern, exts):
   for ext in exts:
     for path in find("""{}/*.{}""".format(buildDirPattern, ext)):
       print(path)
+      command(["xcrun", "lipo", "-info", path])
       mkdir(libDir)
       move(path, libDir)
 
@@ -29,7 +30,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "-D", "CMAKE_MACOSX_BUNDLE=YES",
               "-D", "CMAKE_SYSTEM_NAME=iOS",
               "-D", "CMAKE_OSX_SYSROOT=iphoneos",
-              "-D", """CMAKE_OSX_DEPLOYMENT_TARGET={}""".format(macosTarget),
+              #"-D", """CMAKE_OSX_DEPLOYMENT_TARGET={}""".format(macosTarget),
               "-D", """LIB_DIR={}""".format(libDir),
               "-B", buildDir,
             ])
