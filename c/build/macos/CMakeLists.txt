@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project("ciokomb")
+set(CMAKE_VERBOSE_MAKEFILE 1)
 set(PROJECT_ROOT_PATH "../..")
 include(../${PROJECT_NAME}.cmake)
 link_directories(${CMAKE_BINARY_DIR})
