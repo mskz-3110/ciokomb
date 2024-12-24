@@ -40,7 +40,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
             ])
-          print(find("""{}/**.a""".format(buildDir)))
+          print(find("""{}/**/*.a""".format(buildDir)))
       case "macos":
         for combination in buildConfig[generator]:
           arch, configuration = combination.split(" ")
