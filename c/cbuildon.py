@@ -65,9 +65,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
 def version(osName):
   stdout = ""
   match osName:
-    case "ios":
-      stdout = command(["xcodebuild", "-sdk", "iphoneos"], stdout = subprocess.PIPE).stdout
-    case "macos":
+    case "macos" | "ios":
       stdout = command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout
     case _:
       return "?"
