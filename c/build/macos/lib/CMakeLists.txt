@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.13)
+project("ciokomb")
+set(PROJECT_ROOT_PATH "../../..")
+include(../${PROJECT_NAME}_lib.cmake)
+link_directories(${CMAKE_BINARY_DIR})
+message("CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR}")
+#target_link_libraries(${PROJECT_NAME}-Shared {LIB}.dylib)
+#target_link_libraries(${PROJECT_NAME}-Static {LIB}.a)

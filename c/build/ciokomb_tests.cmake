@@ -1,11 +1,5 @@
-cmake_minimum_required(VERSION 3.13)
-project("ciokomb")
-set(STATIC_LIBRARY_SUFFIX ".a")
-set(PROJECT_ROOT_PATH "../..")
-include(../${PROJECT_NAME}.cmake)
-link_directories(${CMAKE_BINARY_DIR})
-#target_link_libraries(${PROJECT_NAME}-Shared {LIB}.dylib)
-#target_link_libraries(${PROJECT_NAME}-Static {LIB}.a)
+include(./${PROJECT_NAME}.cmake)
+
 set(TESTS_ROOT_PATH ${PROJECT_ROOT_PATH}/tests)
 include_directories(${TESTS_ROOT_PATH})
 set(TEST_NAMES)

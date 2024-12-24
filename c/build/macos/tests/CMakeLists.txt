@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.13)
+project("ciokomb")
+set(STATIC_LIBRARY_SUFFIX ".a")
+#set(PROJECT_ROOT_PATH "../../..")
+set(LIB_ROOT_PATH "${PROJECT_ROOT_PATH}/lib")
+include(../${PROJECT_NAME}_tests.cmake)
+#link_directories(${LIB_ROOT_PATH})
