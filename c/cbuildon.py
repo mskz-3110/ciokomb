@@ -40,6 +40,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--",
               "-sdk", sdk,
             ] + archs + [
+              "INSTALL_PATH", "@executable_path/Frameworks",
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
             ])
