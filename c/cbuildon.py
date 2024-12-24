@@ -30,7 +30,7 @@ def macos_build(isClean):
   for targetDirectory in ["build/macos/lib", "build/macos/tests"]:
     chdir(targetDirectory)
     cmake_build_macos(isClean)
-  chdir(oldDir)
+    chdir(oldDir)
 
 def macos_test(argv):
   pass
