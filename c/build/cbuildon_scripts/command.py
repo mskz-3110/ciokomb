@@ -4,6 +4,7 @@ import sys
 import os
 import glob
 import shutil
+import yaml
 
 def command(args, onProcess = None, **kwargs):
   if onProcess is None:
@@ -22,12 +23,15 @@ def copy(src, dst):
   else:
     shutil.copytree(src, dst)
 
-def move(src, dst):
-  shutil.move(src, dst)
-
 def rm(path):
-  if os.path.exists(path):
+  if os.path.isfile(path):
+    os.remove(path)
+  elif os.path.isdir(path):
     shutil.rmtree(path)
+
+def move(src, dst):
+  rm(os.path.join(dst, os.path.basename(src)))
+  shutil.move(src, dst)
 
 def mkdir(path):
   os.makedirs(path, exist_ok = True)

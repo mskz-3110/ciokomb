@@ -14,9 +14,9 @@ jobs:
         run: pip install pyyaml
       - name: Build
         run: python ./c/cbuildon.py ios.build
-#        run: python ./c/cbuildon.py macos.build
-#      - name: Test
-#        run: python ./c/cbuildon.py macos.test
+        run: python ./c/cbuildon.py macos.build
+      - name: Test
+        run: python ./c/cbuildon.py macos.test
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
