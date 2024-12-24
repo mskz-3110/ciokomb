@@ -18,13 +18,12 @@ def cmake_build_macos(isClean):
           "cmake",
           "-G", "Xcode",
           "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(arch),
-          "-D", """CONFIGURATION={}""".format(configuration),
           "-B", buildDirectory,
         ])
       elif isClean:
         command(buildArgs + ["--target", "clean"])
       command(buildArgs, lambda result: None)
-      print(find("""build/{}/**/*""".format(configuration)))
+      print(find("build/**/*.a"))
 
 def macos_build(isClean):
   oldDir = getdir()
