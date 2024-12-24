@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.13)
+project(ciokomb)
+set(PROJECT_ROOT_PATH ../../..)
+include(../../${PROJECT_NAME}_lib.cmake)
+#target_link_libraries(${PROJECT_NAME}-Shared {LIB}.dll)
+#target_link_libraries(${PROJECT_NAME}-Static {LIB}.lib)

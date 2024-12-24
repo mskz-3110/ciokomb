@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.13)
+project(ciokomb)
+link_directories(${LIB_DIR})
+set(PROJECT_ROOT_PATH ../../..)
+include(../../${PROJECT_NAME}_tests.cmake)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:utf-8")
