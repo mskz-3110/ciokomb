@@ -4,15 +4,13 @@ sys.path.append("""{}/build""".format(os.path.dirname(__file__)))
 from cbuildon_scripts import *
 
 def macos_version():
-  return command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout.rstrip()
+  return str(command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout).rstrip()
 
-def cmake_build_macos(isClean):
-  macosVersion = macos_version()
-  print("""macosVersion={}""".format(macosVersion))
+def cmake_build_macos(libRootDir, isClean):
   for arch in ["x86_64"]:
     for configuration in ["Debug", "Release"]:
       buildDirectory = """build/{}_{}""".format(arch, configuration)
-      libDir = """../../../lib/macos/{}/{}""".format(macosVersion, configuration)
+      libDir = os.path.abspath("""{}/{}""".format(libRootDir, configuration))
       buildArgs = [
           "cmake",
           "--build", buildDirectory,
@@ -39,9 +37,10 @@ def cmake_build_macos(isClean):
 
 def macos_build(isClean):
   oldDir = getdir()
+  libRootDir = """{}/lib/macos/{}""".format(oldDir, macos_version())
   for targetDirectory in ["build/macos/lib", "build/macos/tests"]:
     chdir(targetDirectory)
-    cmake_build_macos(isClean)
+    cmake_build_macos(libRootDir, isClean)
     chdir(oldDir)
 
 def macos_test(argv):
