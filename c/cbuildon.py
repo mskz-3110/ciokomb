@@ -4,14 +4,14 @@ sys.path.append("""{}/build""".format(os.path.dirname(__file__)))
 from cbuildon_scripts import *
 
 def cmake_build_macos(isClean):
-  buildArgs = [
-      "cmake",
-      "--build", buildDirectory,
-      "--config", configuration,
-    ]
   configurations = ["Debug", "Release"]
   for configuration in configurations:
     buildDirectory = "build"
+    buildArgs = [
+        "cmake",
+        "--build", buildDirectory,
+        "--config", configuration,
+      ]
     if os.path.isdir(buildDirectory) is False:
       mkdir(buildDirectory)
       command([
