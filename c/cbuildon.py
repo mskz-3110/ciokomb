@@ -27,7 +27,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "-G", "Xcode",
               "-D", "CMAKE_MACOSX_BUNDLE=YES",
               "-D", "CMAKE_SYSTEM_NAME=iOS",
-              "-D", """CMAKE_OSX_SYSROOT={}""".format(sdk),
+              "-D", "CMAKE_OSX_SYSROOT=iphoneos",
               "-D", """CMAKE_OSX_DEPLOYMENT_TARGET={}""".format(macosTarget),
               "-D", """LIB_DIR={}""".format(libDir),
               "-B", buildDir,
@@ -40,6 +40,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--",
               "CODE_SIGNING_REQUIRED=NO",
               "CODE_SIGNING_ALLOWED=NO",
+              "-sdk", sdk,
             ] + archs)
           for path in find("""{}/**/*.a""".format(buildDir)):
             command(["xcrun", "lipo", "-info", path])
