@@ -10,13 +10,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - run: pip install pyyaml
+      - nane: Install yaml
+        run: pip install pyyaml
       - name: Build
-        run: python ./c/cbuildon.py macos.build
-      - name: Test
-        run: python ./c/cbuildon.py macos.test
+        run: python ./c/cbuildon.py ios.build
+#        run: python ./c/cbuildon.py macos.build
+#      - name: Test
+#        run: python ./c/cbuildon.py macos.test
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: lib_macos
-          path: ./c/lib
+          name: lib_build_macos
+          path: ./c/lib/

@@ -12,11 +12,38 @@ def move_lib(libDir, buildDir, exts):
 def cmake_build(osName, libRootDir, buildConfig, isClean):
   for generator in buildConfig.keys():
     match osName:
+      case "ios":
+        for combination in buildConfig[generator]:
+          osxDeploymentTarget, configuration = combination.split(" ")
+          buildDir = """{}_{}""".format(arch, configuration)
+          libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
+          buildDir = """build/{}""".format(buildDir)
+          if isClean:
+            rm(buildDir)
+          if os.path.isdir(buildDir) is False:
+            mkdir(buildDir)
+            command([
+              "cmake",
+              "-G", "Xcode",
+              "-D", "CMAKE_MACOSX_BUNDLE=YES",
+              "-D", "CMAKE_SYSTEM_NAME=iOS",
+              "-D", "CMAKE_OSX_SYSROOT=iphoneos",
+              "-D", """CMAKE_OSX_DEPLOYMENT_TARGET={}""".format(osxDeploymentTarget),
+              "-D", """LIB_DIR={}""".format(libDir),
+              "-B", buildDir,
+            ])
+          command([
+              "cmake",
+              "--build", buildDir,
+              "--config", configuration,
+            ])
+          print(find("""{}/**.*.a""".format(buildDir)))
       case "macos":
         for combination in buildConfig[generator]:
           arch, configuration = combination.split(" ")
-          buildDir = """build/{}_{}""".format(arch, configuration)
-          libDir = os.path.abspath("""{}_{}_{}""".format(libRootDir, arch, configuration))
+          buildDir = """{}_{}""".format(arch, configuration)
+          libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
+          buildDir = """build/{}""".format(buildDir)
           if isClean:
             rm(buildDir)
           if os.path.isdir(buildDir) is False:
@@ -36,14 +63,19 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
           move_lib(libDir, buildDir, ["dylib", "a"])
 
 def version(osName):
+  stdout = ""
   match osName:
+    case "ios":
+      stdout = command(["xcodebuild", "-sdk", "iphoneos"], stdout = subprocess.PIPE).stdout
     case "macos":
-      return command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout.decode("utf-8").rstrip()
-  return "?"
+      stdout = command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout
+    case _:
+      return "?"
+  return stdout.decode("utf-8").rstrip()
 
 def build_config_paths(osName, argv):
   if len(argv) == 0:
-    return find("""build/{}/build.yaml""".format(osName))
+    return find("""build/{}/build*.yaml""".format(osName))
   cwd = getdir()
   paths = []
   for arg in argv:
@@ -58,10 +90,12 @@ def build(osName, isClean):
   for path in build_config_paths(osName, argv):
     with open(path, "r", encoding = "utf-8") as file:
       buildConfig = yaml.safe_load(file)
-      for buildDir in ["lib", "tests"]:
-        chdir("""build/{}/{}""".format(osName, buildDir))
-        cmake_build(osName, libRootDir, buildConfig, isClean)
-        chdir(oldDir)
+      for dirName in ["lib", "tests"]:
+        buildDir = """build/{}/{}""".format(osName, dirName)
+        if os.path.isdir(buildDir):
+          chdir(buildDir)
+          cmake_build(osName, libRootDir, buildConfig, isClean)
+          chdir(oldDir)
 
 def test_names(testNames = []):
   if len(testNames) == 0:
@@ -105,6 +139,10 @@ match taskName:
     build("macos", True)
   case "macos.test":
     test("macos", argv)
+  case "ios.build":
+    build("ios", False)
+  case "ios.rebuild":
+    build("ios", True)
   case _:
     strings = []
     if 0 < len(taskName):
@@ -130,10 +168,14 @@ match taskName:
 
   android.rebuild <yaml file paths>
 
-  macos.build
+  macos.build <yaml file paths>
 
-  macos.rebuild
+  macos.rebuild <yaml file paths>
 
   macos.test <test names>
+
+  ios.build <yaml file paths>
+
+  ios.rebuild <yaml file paths>
 """)
     sys.exit("\n".join(strings))
