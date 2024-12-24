@@ -15,7 +15,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
       case "ios":
         for combination in buildConfig[generator]:
           osxDeploymentTarget, configuration = combination.split(" ")
-          buildDir = """{}_{}""".format(arch, configuration)
+          buildDir = """{}""".format(configuration)
           libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
           buildDir = """build/{}""".format(buildDir)
           if isClean:
