@@ -22,6 +22,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
             rm(buildDir)
           if os.path.isdir(buildDir) is False:
             mkdir(buildDir)
+            os.environ["IPHONEOS_DEPLOYMENT_TARGET"] = iosTarget
             command([
               "cmake",
               "-G", "Xcode",
@@ -29,7 +30,6 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "-D", "CMAKE_SYSTEM_NAME=iOS",
               "-D", "CMAKE_OSX_SYSROOT=iphoneos",
               "-D", """CMAKE_OSX_DEPLOYMENT_TARGET={}""".format(macosTarget),
-              "-D", """IPHONEOS_DEPLOYMENT_TARGET={}""".format(iosTarget),
               "-D", """LIB_DIR={}""".format(libDir),
               "-B", buildDir,
             ])
@@ -37,7 +37,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "cmake",
               "--build", buildDir,
               "--config", configuration,
-            ], lambda _: None)
+            ])
           print(find("""{}/**.*.a""".format(buildDir)))
       case "macos":
         for combination in buildConfig[generator]:
