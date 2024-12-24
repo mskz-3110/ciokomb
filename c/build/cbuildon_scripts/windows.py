@@ -1,5 +1,4 @@
 from .cmake import *
-from .test import *
 
 def windows_build(argv, isClean):
   oldDir = getdir()

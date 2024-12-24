@@ -1,5 +1,4 @@
 from .cmake import *
-from .test import *
 
 def android_build(argv, isClean):
   oldDir = getdir()

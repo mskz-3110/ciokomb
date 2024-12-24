@@ -1,7 +1,6 @@
 import os
 import yaml
 from .command import *
-from .platform import *
 
 def cmake_build_android(androidNdkRoot, filePath, isClean):
   exists_assert(filePath)
