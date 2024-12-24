@@ -36,6 +36,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "cmake",
               "--build", buildDir,
               "--config", configuration,
+              "--",
               "-D", "CODE_SIGNING_REQUIRED=NO",
               "-D", "CODE_SIGNING_ALLOWED=NO",
             ])
