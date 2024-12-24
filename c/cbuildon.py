@@ -22,7 +22,7 @@ def cmake_build_macos(isClean):
       ])
     elif isClean:
       command(buildArgs + ["--target", "clean"])
-    command(buildArgs)
+    command(buildArgs, lambda: None)
 
 def macos_build(isClean):
   oldDir = getdir()
