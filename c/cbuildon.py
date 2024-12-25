@@ -1,6 +1,5 @@
 import sys
 import os
-import pathlib
 sys.path.append(os.path.join(os.path.dirname(__file__), "build"))
 from cbuildon_scripts import *
 
@@ -183,7 +182,7 @@ def os_version(osName):
               break
       filePath = "/etc/debian_version"
       if os.path.isfile(filePath):
-        linuxVersion = pathlib.Path(filePath).read_text().rstrip()
+        linuxVersion = file_read(filePath).rstrip()
       return "_".join([linuxName, linuxVersion, "gcc", command_capture(["gcc", "-dumpversion"]).stdout.rstrip()])
   return None
 
@@ -205,14 +204,13 @@ def build(osName, argv, isClean):
   if osVersion is not None:
     libRootDir = """{}/{}""".format(libRootDir, osVersion)
   for path in build_config_paths(osName, argv):
-    with open(path, "r", encoding = "utf-8") as file:
-      buildConfig = yaml.safe_load(file)
-      for dirName in ["lib", "tests"]:
-        buildDir = """build/{}/{}""".format(osName, dirName)
-        if os.path.isdir(buildDir):
-          chdir(buildDir)
-          cmake_build(osName, libRootDir, buildConfig, isClean)
-          chdir(oldDir)
+    buildConfig = yaml_load(path)
+    for dirName in ["lib", "tests"]:
+      buildDir = """build/{}/{}""".format(osName, dirName)
+      if os.path.isdir(buildDir):
+        chdir(buildDir)
+        cmake_build(osName, libRootDir, buildConfig, isClean)
+        chdir(oldDir)
 
 def test_names(testNames = []):
   if len(testNames) == 0:

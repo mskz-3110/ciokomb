@@ -5,6 +5,7 @@ import os
 import glob
 import shutil
 import yaml
+import pathlib
 
 def color_to_escape(color = None):
   match color:
@@ -47,11 +48,24 @@ def command(args, onProcess = None, **kwargs):
 def command_capture(args, onProcess = None, **kwargs):
   return command(args, onProcess, **(dict(capture_output = True, text = True, encoding = "utf-8") | kwargs))
 
+def exists(path):
+  return os.path.exists(path)
+
+def exists_assert(path):
+  if exists(path) is False:
+    sys.exit("""{} does not exist.""".format(console_string(path, "red")))
+
 def copy(src, dst):
   if os.path.isfile(src):
     shutil.copy2(src, dst)
   else:
     shutil.copytree(src, dst)
+
+def copy_if_not_exists(src, dst):
+  if os.path.exists(os.path.join(dst, os.path.basename(src))) is not True:
+    copy(src, dst)
+    return True
+  return False
 
 def rm(path):
   if os.path.isfile(path):
@@ -82,14 +96,15 @@ def find(pattern, recursive = True):
     paths.append(path)
   return paths
 
-def exists(path):
-  return os.path.exists(path)
-
-def exists_assert(path):
-  if exists(path) is False:
-    sys.exit("""{} does not exist.""".format(console_string(path, "red")))
-
 def shift(array, defaultValue = None):
   if 0 < len(array):
     return array.pop(0)
   return defaultValue
+
+def yaml_load(filePath):
+  with open(filePath, "r", encoding = "utf-8") as file:
+    return yaml.safe_load(file)
+  return {}
+
+def file_read(filePath):
+  return pathlib.Path(filePath).read_text()
