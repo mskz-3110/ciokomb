@@ -6,16 +6,46 @@ import glob
 import shutil
 import yaml
 
+def color_to_escape(color = None):
+  match color:
+    case "black":
+      return 0
+    case "red":
+      return 1
+    case "green":
+      return 2
+    case "yellow":
+      return 3
+    case "blue":
+      return 4
+    case "magenta":
+      return 5
+    case "cyan":
+      return 6
+    case "gray":
+      return 7
+    case _:
+      return 9
+
+def console_string(value, fgColor, bgColor = "black"):
+  return """\033[{}m\033[{}m{}\033[0m""".format(color_to_escape(bgColor) + 40, color_to_escape(fgColor) + 30, value)
+
 def command(args, onProcess = None, **kwargs):
   if onProcess is None:
-    onProcess = lambda result: """\033[40m\033[31mFail: Return code is {}.\033[0m""".format(result.returncode)
-  print("""\033[40m\033[32m[{}] {} $ {}\033[0m""".format(datetime.datetime.now().strftime("%y/%m/%d %H:%M:%S"), os.getcwd(), " ".join(args)))
+    onProcess = lambda result: console_string("""Fail: Return code is {}.""".format(result.returncode), "red")
+  commandString = args
+  if type(args) is not str:
+    commandString = " ".join(args)
+  print(console_string("""[{}] {} $ {}""".format(datetime.datetime.now().strftime("%y/%m/%d %H:%M:%S"), os.getcwd(), commandString), "green"))
   result = subprocess.run(args, **kwargs)
   if result.returncode != 0:
     exitArg = onProcess(result)
     if exitArg is not None:
       sys.exit(exitArg)
   return result
+
+def command_capture(args, onProcess = None, **kwargs):
+  return command(args, onProcess, **(dict(capture_output = True, text = True, encoding = "utf-8") | kwargs))
 
 def copy(src, dst):
   if os.path.isfile(src):
@@ -57,7 +87,7 @@ def exists(path):
 
 def exists_assert(path):
   if exists(path) is False:
-    sys.exit("""\033[40m\033[31m{}\033[0m does not exist.""".format(path))
+    sys.exit("""{} does not exist.""".format(console_string(path, "red")))
 
 def shift(array, defaultValue = None):
   if 0 < len(array):

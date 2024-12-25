@@ -1,7 +1,7 @@
 import sys
 import os
 import pathlib
-sys.path.append("""{}/build""".format(os.path.dirname(__file__)))
+sys.path.append(os.path.join(os.path.dirname(__file__), "build"))
 from cbuildon_scripts import *
 
 def move_lib(libDir, buildDirPattern, exts):
@@ -25,9 +25,9 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
       case "ios":
         for combination in buildConfig[generator]:
           archs, configuration = combination.split(" ")
-          buildDir = """{}""".format(configuration)
-          libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
-          buildDir = """build/{}""".format(buildDir)
+          buildDir = configuration
+          libDir = os.path.abspath("_".join([libRootDir, buildDir]))
+          buildDir = "/".join(["build", buildDir])
           if isClean:
             rm(buildDir)
           if os.path.isdir(buildDir) is False:
@@ -38,7 +38,7 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "-D", "CMAKE_MACOSX_BUNDLE=YES",
               "-D", "CMAKE_SYSTEM_NAME=iOS",
               "-D", "CMAKE_OSX_SYSROOT=iphoneos",
-              "-D", """LIB_DIR={}""".format(libDir),
+              "-D", "=".join(["LIB_DIR", libDir]),
               "-B", buildDir,
             ])
           options = []
@@ -58,9 +58,9 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
       case "macos":
         for combination in buildConfig[generator]:
           archs, configuration = combination.split(" ")
-          buildDir = """{}""".format(configuration)
-          libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
-          buildDir = """build/{}""".format(buildDir)
+          buildDir = configuration
+          libDir = os.path.abspath("_".join([libRootDir, buildDir]))
+          buildDir = "/".join(["build", buildDir])
           if isClean:
             rm(buildDir)
           if os.path.isdir(buildDir) is False:
@@ -68,8 +68,8 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
             command([
               "cmake",
               "-G", "Xcode",
-              "-D", """CMAKE_OSX_ARCHITECTURES={}""".format(archs),
-              "-D", """LIB_DIR={}""".format(libDir),
+              "-D", "=".join(["CMAKE_OSX_ARCHITECTURES", archs]),
+              "-D", "=".join(["LIB_DIR", libDir]),
               "-B", buildDir,
             ])
           command([
@@ -85,8 +85,8 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
           for combination in buildConfig[generator]:
             arch, runtime, configuration = combination.split(" ")
             buildDir = "_".join([version, arch, runtime, configuration])
-            libDir = os.path.abspath("""{}/{}""".format(libRootDir, buildDir))
-            buildDir = """build/{}""".format(buildDir)
+            libDir = os.path.abspath("/".join([libRootDir, buildDir]))
+            buildDir = "/".join(["build", buildDir])
             if isClean:
               rm(buildDir)
             if os.path.isdir(buildDir) is False:
@@ -95,8 +95,9 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
                 "cmake",
                 "-G", generator,
                 "-A", arch,
-                "-D", """CMAKE_MSVC_RUNTIME_LIBRARY={}""".format(cmake_msvc_runtime_library(runtime, configuration)),
-                "-D", """LIB_DIR={}""".format(libDir),
+                "-D", "=".join(["CMAKE_MSVC_RUNTIME_LIBRARY", cmake_msvc_runtime_library(runtime, configuration)]),
+                "-D", "=".join(["CXX_FLAGS", "/source-charset:utf-8"]),
+                "-D", "=".join(["LIB_DIR", libDir]),
                 "-B", buildDir,
               ])
             command([
@@ -105,15 +106,15 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--config", configuration,
             ])
             if isMoveLib:
-              move_lib(libDir, """{}/**""".format(buildDir), ["dll", "lib"])
+              move_lib(libDir, """{}/{}""".format(buildDir, configuration), ["dll", "lib"])
       case "android":
         androidNdkRoot = os.environ["ANDROID_NDK_ROOT"]
         for generator in buildConfig.keys():
           for combination in buildConfig[generator]:
             platform, abi, configuration = combination.split(" ")
             buildDir = "_".join([platform, abi, configuration])
-            libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
-            buildDir = """build/{}""".format(buildDir)
+            libDir = os.path.abspath("_".join([libRootDir, buildDir]))
+            buildDir = "/".join(["build", buildDir])
             if isClean:
               rm(buildDir)
             if os.path.isdir(buildDir) is False:
@@ -122,9 +123,9 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
                 "cmake",
                 "-G", generator,
                 "-D", """CMAKE_TOOLCHAIN_FILE={}/build/cmake/android.toolchain.cmake""".format(androidNdkRoot),
-                "-D", """ANDROID_PLATFORM={}""".format(platform),
-                "-D", """ANDROID_ABI={}""".format(abi),
-                "-D", """LIB_DIR={}""".format(libDir),
+                "-D", "=".join(["ANDROID_PLATFORM", platform]),
+                "-D", "=".join(["ANDROID_ABI", abi]),
+                "-D", "=".join(["LIB_DIR", libDir]),
                 "-B", buildDir,
               ])
             command([
@@ -133,19 +134,19 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
               "--config", configuration,
             ])
             if isMoveLib:
-              move_lib(libDir, """{}/**""".format(buildDir), ["so", "a"])
+              move_lib(libDir, buildDir, ["so", "a"])
       case "linux":
         for configuration in buildConfig.keys():
-          buildDir = "_".join([configuration])
-          libDir = os.path.abspath("""{}_{}""".format(libRootDir, buildDir))
-          buildDir = """build/{}""".format(buildDir)
+          buildDir = configuration
+          libDir = os.path.abspath("_".join([libRootDir, buildDir]))
+          buildDir = "/".join(["build", buildDir])
           if isClean:
             rm(buildDir)
           if os.path.isdir(buildDir) is False:
             mkdir("build")
             command([
               "cmake",
-              "-D", """LIB_DIR={}""".format(libDir),
+              "-D", "=".join(["LIB_DIR", libDir]),
               "-B", buildDir,
             ])
           command([
@@ -154,14 +155,14 @@ def cmake_build(osName, libRootDir, buildConfig, isClean):
             "--config", configuration,
           ])
           if isMoveLib:
-            move_lib(libDir, """{}/**""".format(buildDir), ["so", "a"])
+            move_lib(libDir, buildDir, ["so", "a"])
 
 def os_version(osName):
   match osName:
     case "ios":
-      stdout = command(["xcrun", "--sdk", "iphoneos", "--show-sdk-version"], stdout = subprocess.PIPE).stdout
+      return command_capture(["xcrun", "--sdk", "iphoneos", "--show-sdk-version"]).stdout.rstrip()
     case "macos":
-      stdout = command(["sw_vers", "--productVersion"], stdout = subprocess.PIPE).stdout
+      return command_capture(["sw_vers", "--productVersion"]).stdout.rstrip()
     case "android":
       with open("""{}/source.properties""".format(os.environ["ANDROID_NDK_ROOT"])) as file:
         for line in file.readlines():
@@ -171,7 +172,7 @@ def os_version(osName):
       return "?"
     case "linux":
       linuxName = "?"
-      version = "?"
+      linuxVersion = "?"
       filePath = "/etc/os-release"
       if os.path.isfile(filePath):
         with open(filePath) as file:
@@ -182,11 +183,9 @@ def os_version(osName):
               break
       filePath = "/etc/debian_version"
       if os.path.isfile(filePath):
-        version = pathlib.Path(filePath).read_text().rstrip()
-      return "_".join([linuxName, version])
-    case _:
-      return None
-  return stdout.decode("utf-8").rstrip()
+        linuxVersion = pathlib.Path(filePath).read_text().rstrip()
+      return "_".join([linuxName, linuxVersion, "gcc", command_capture(["gcc", "-dumpversion"]).stdout.rstrip()])
+  return None
 
 def build_config_paths(osName, argv):
   if len(argv) == 0:
@@ -245,7 +244,7 @@ taskName = shift(argv, "")
 match taskName:
   case "docker.build":
     command(["docker", "compose", "build"])
-  case "docker.run":
+  case "docker.run.command":
     print(" ".join(["docker", "compose", "run", "--rm", "debian", "bash"]))
   case "linux.build":
     build("linux", argv, False)
@@ -278,15 +277,15 @@ match taskName:
   case _:
     strings = []
     if 0 < len(taskName):
-      strings.append("""\033[40m\033[31m{}\033[0m is undefined.""".format(taskName))
+      strings.append("""{} is undefined.""".format(console_string(taskName, "red")))
     strings.append("""<Tasks>
   docker.build
 
-  docker.run
+  docker.run.command
 
-  linux.build
+  linux.build <yaml file paths>
 
-  linux.rebuild
+  linux.rebuild <yaml file paths>
 
   linux.test <test names>
 
