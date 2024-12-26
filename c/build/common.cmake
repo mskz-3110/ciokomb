@@ -8,6 +8,7 @@ list(APPEND SRCS ${SRC_ROOT_PATH}/ciokomb/string.c)
 list(APPEND SRCS ${SRC_ROOT_PATH}/ciokomb/arist.c)
 list(APPEND SRCS ${SRC_ROOT_PATH}/ciokomb/pipe.c)
 list(APPEND SRCS ${SRC_ROOT_PATH}/ciokomb/env.c)
+list(APPEND SRCS ${SRC_ROOT_PATH}/ciokomb/thread.c)
 
 set(INCS)
 list(APPEND INCS ${PROJECT_ROOT_PATH}/inc)

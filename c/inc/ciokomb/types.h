@@ -1,6 +1,7 @@
 #ifndef __CIOKOMB_TYPES_H__
 #define __CIOKOMB_TYPES_H__
 #if defined(_WIN32) || defined(_WIN64)
+  #include <windows.h>
   #define _CRTDBG_MAP_ALLOC
   #include <crtdbg.h>
   #define CIOKOMB_WINDOWS
