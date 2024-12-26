@@ -1,9 +1,9 @@
 #include <ciokomb.h>
 
-typedef struct {
+CIOKOMB_STRUCT_BEGIN
   int32 PrevIndex;
   int32 NextIndex;
-} __AristNode;
+CIOKOMB_STRUCT_END(__AristNode)
 
 static CIOKOMB_API_SRC(int32, __arist_get_block_size, CiokombArist* arist){
   return arist->__ElementSize + sizeof(__AristNode);

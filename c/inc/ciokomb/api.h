@@ -21,6 +21,9 @@
   #define CIOKOMB_API_END
 #endif
 
+#define CIOKOMB_STRUCT_BEGIN typedef struct {
+#define CIOKOMB_STRUCT_END(_name) } _name;
+
 #ifndef null
   #define null NULL
 #endif

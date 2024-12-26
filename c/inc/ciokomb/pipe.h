@@ -2,9 +2,9 @@
 #define __CIOKOMB_PIPE_H__
 #include <ciokomb/api.h>
 
-typedef struct {
+CIOKOMB_STRUCT_BEGIN
   int32 Fds[2];
-} CiokombPipeIO;
+CIOKOMB_STRUCT_END(CiokombPipeIO)
 
 CIOKOMB_API_BEGIN
   CIOKOMB_API_INC(CiokombPipeIO*, ciokomb_pipe_open)

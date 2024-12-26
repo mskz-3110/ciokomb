@@ -2,14 +2,14 @@
 #define __CIOKOMB_ARIST_H__
 #include <ciokomb/api.h>
 
-typedef struct {
+CIOKOMB_STRUCT_BEGIN
   char* Bytes;
   int32 Count;
   int32 RootIndex;
   int32 __EmptyIndex;
   int32 __ElementSize;
   int32 __AllocatedSize;
-} CiokombArist;
+CIOKOMB_STRUCT_END(CiokombArist)
 
 CIOKOMB_API_BEGIN
   CIOKOMB_API_INC(CiokombArist*, ciokomb_arist_new, int32 elementSize)

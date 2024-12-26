@@ -2,11 +2,11 @@
 #define __CIOKOMB_STRING_H__
 #include <ciokomb/api.h>
 
-typedef struct {
+CIOKOMB_STRUCT_BEGIN
   char* Chars;
   int32 Length;
   int32 __AllocatedSize;
-} CiokombString;
+CIOKOMB_STRUCT_END(CiokombString)
 
 CIOKOMB_API_BEGIN
   CIOKOMB_API_INC(String, ciokomb_string_empty)
