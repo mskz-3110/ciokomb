@@ -20,17 +20,4 @@
   #define CIOKOMB_API_BEGIN
   #define CIOKOMB_API_END
 #endif
-
-#define CIOKOMB_STRUCT_BEGIN typedef struct {
-#define CIOKOMB_STRUCT_END(_name) } _name;
-
-#define CIOKOMB_CALLBACK(_return_type, _name, ...) typedef _return_type (*_name)(__VA_ARGS__);
-
-#ifndef null
-  #define null NULL
-#endif
-
-#ifndef memzero
-  #define memzero(_addr, _size) memset(_addr, 0, _size)
-#endif
 #endif

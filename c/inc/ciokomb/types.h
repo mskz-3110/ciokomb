@@ -7,6 +7,24 @@
   #define CIOKOMB_WINDOWS
 #endif
 
+#define CIOKOMB_TYPEDEC_BEGIN(_type) typedef _type {
+#define CIOKOMB_TYPEDEC_END(_name) } _name;
+
+#define CIOKOMB_STRUCT_BEGIN CIOKOMB_TYPEDEC_BEGIN(struct)
+#define CIOKOMB_STRUCT_END(_name) CIOKOMB_TYPEDEC_END(_name)
+
+#define CIOKOMB_UNION_BEGIN CIOKOMB_TYPEDEC_BEGIN(union)
+#define CIOKOMB_UNION_END(_name) CIOKOMB_TYPEDEC_END(_name)
+
+#define CIOKOMB_ENUM_BEGIN CIOKOMB_TYPEDEC_BEGIN(enum)
+#define CIOKOMB_ENUM_END(_name) CIOKOMB_TYPEDEC_END(_name)
+
+#define CIOKOMB_CALLBACK(_return_type, _name, ...) typedef _return_type (*_name)(__VA_ARGS__);
+
+#ifndef null
+  #define null NULL
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
